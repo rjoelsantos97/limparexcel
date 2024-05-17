@@ -19,15 +19,13 @@ def clean_data(df):
 def save_to_excel(df, original_file, sheet_name):
     with BytesIO() as output:
         # Carregar o workbook original
+        book = load_workbook(original_file)
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            book = load_workbook(original_file)
             writer.book = book
             writer.sheets = {ws.title: ws for ws in book.worksheets}
             
             # Escrever a folha limpa no mesmo lugar
             df.to_excel(writer, sheet_name=sheet_name, index=False)
-            
-            # Salvar o arquivo modificado
             writer.save()
             processed_data = output.getvalue()
         
