@@ -3,7 +3,6 @@ import pandas as pd
 import json
 from streamlit_lottie import st_lottie
 from io import BytesIO
-from openpyxl import load_workbook
 
 # Função para carregar animação Lottie de um arquivo
 def load_lottiefile(filepath: str):
@@ -15,23 +14,12 @@ def clean_data(df):
     df_clean = df[~df.apply(lambda row: row.astype(str).str.contains('Total').any(), axis=1)]
     return df_clean
 
-# Função para salvar DataFrame em um arquivo Excel mantendo o formato
-def save_to_excel(df, original_file, sheet_name):
-    # Carregar o workbook original
-    book = load_workbook(original_file)
-    with BytesIO() as output:
-        # Se a planilha já existe, removê-la
-        if sheet_name in book.sheetnames:
-            std = book[sheet_name]
-            book.remove(std)
-
-        # Adicionar a nova planilha com os dados limpos
-        with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            writer.book = book
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
-            writer.save()
-
-        processed_data = output.getvalue()
+# Função para salvar DataFrame em um arquivo Excel
+def save_to_excel(df):
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Dados Limpos')
+    processed_data = output.getvalue()
     return processed_data
 
 # Carregar animação Lottie do arquivo
@@ -91,7 +79,7 @@ if uploaded_file is not None:
             st.write(df_clean)
         
             # Salvar os dados limpos em um arquivo Excel
-            processed_data = save_to_excel(df_clean, uploaded_file, sheet_choice)
+            processed_data = save_to_excel(df_clean)
         
         # Opção para baixar os dados limpos em formato Excel
         st.download_button(
