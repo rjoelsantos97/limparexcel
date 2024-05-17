@@ -19,15 +19,19 @@ def clean_data(df):
 def save_to_excel(df, original_file, sheet_name):
     # Carregar o workbook original
     book = load_workbook(original_file)
-    writer = pd.ExcelWriter(BytesIO(), engine='openpyxl')
-    writer.book = book
+    with BytesIO() as output:
+        # Se a planilha já existe, removê-la
+        if sheet_name in book.sheetnames:
+            std = book[sheet_name]
+            book.remove(std)
 
-    # Adicionar ou substituir a folha com os dados limpos
-    df.to_excel(writer, sheet_name=sheet_name, index=False)
+        # Adicionar a nova planilha com os dados limpos
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            writer.book = book
+            df.to_excel(writer, sheet_name=sheet_name, index=False)
+            writer.save()
 
-    # Salvar o workbook modificado em um BytesIO
-    writer.save()
-    processed_data = writer.handles.handle.getvalue()
+        processed_data = output.getvalue()
     return processed_data
 
 # Carregar animação Lottie do arquivo
