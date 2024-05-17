@@ -20,15 +20,14 @@ def save_to_excel(df, original_file, sheet_name):
     with BytesIO() as output:
         # Carregar o workbook original
         book = load_workbook(original_file)
+        
+        # Escrever a folha limpa no mesmo lugar
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             writer.book = book
-            writer.sheets = {ws.title: ws for ws in book.worksheets}
-            
-            # Escrever a folha limpa no mesmo lugar
             df.to_excel(writer, sheet_name=sheet_name, index=False)
             writer.save()
-            processed_data = output.getvalue()
         
+        processed_data = output.getvalue()
     return processed_data
 
 # Carregar animação Lottie do arquivo
