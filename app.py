@@ -4,14 +4,11 @@ import json
 from streamlit_lottie import st_lottie
 from io import BytesIO
 from openpyxl import load_workbook
-import requests
 
-
-# Função para carregar animação Lottie
+# Função para carregar animação Lottie de um arquivo
 def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return json.load(f)
-
 
 # Função para limpar os dados removendo linhas que contêm "Total"
 def clean_data(df):
@@ -36,7 +33,7 @@ def save_to_excel(df, original_file, sheet_name):
         
     return processed_data
 
-# Carregar animação Lottie
+# Carregar animação Lottie do arquivo
 lottie_loading = load_lottiefile("loading_animation.json")
 
 # Título da aplicação
@@ -63,8 +60,27 @@ if uploaded_file is not None:
     # Mostrar o botão para executar o tratamento
     if st.button("Executar Tratamento"):
         with st.spinner('Processando...'):
+            # Centralizar a animação e a mensagem
+            st.markdown(
+                """
+                <style>
+                .css-1cpxqw2 {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True,
+            )
+            
             # Mostrar animação durante o processamento
-            st_lottie(lottie_loading, height=200, key="loading")
+            st_lottie(lottie_loading, height=300, key="loading")
+            
+            # Mostrar mensagem personalizada
+            st.markdown("<h2>A fazer magia... só demora um bocadinho, obrigado por esperar</h2>", unsafe_allow_html=True)
             
             # Limpar os dados
             df_clean = clean_data(df_sheet)
