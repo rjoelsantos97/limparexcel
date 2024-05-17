@@ -4,11 +4,14 @@ import json
 from streamlit_lottie import st_lottie
 from io import BytesIO
 from openpyxl import load_workbook
+import requests
 
-# Função para carregar animação Lottie
-def load_lottiefile(filepath: str):
-    with open(filepath, "r") as f:
-        return json.load(f)
+# Função para carregar animação Lottie de uma URL
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
 
 # Função para limpar os dados removendo linhas que contêm "Total"
 def clean_data(df):
@@ -33,8 +36,8 @@ def save_to_excel(df, original_file, sheet_name):
         
     return processed_data
 
-# Carregar animação Lottie
-lottie_loading = load_lottiefile("loading_animation.json")
+# Carregar animação Lottie de uma URL
+lottie_loading = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_zv4vcgk3.json")
 
 # Título da aplicação
 st.title("Upload de Arquivo Excel e Limpeza de Dados")
