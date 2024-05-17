@@ -48,7 +48,7 @@ if uploaded_file is not None:
     
     # Mostrar o botão para executar o tratamento
     if st.button("Executar Tratamento"):
-        with st.spinner('Processando...'):
+        with st.spinner('A processar...'):
             # Centralizar a animação e a mensagem
             st.markdown(
                 """
@@ -69,7 +69,7 @@ if uploaded_file is not None:
             st_lottie(lottie_loading, height=300, key="loading")
             
             # Mostrar mensagem personalizada
-            st.markdown("<h2>A fazer magia... só demora um bocadinho, obrigado por esperar</h2>", unsafe_allow_html=True)
+            st.markdown("<h3>A fazer magia... só demora um bocadinho, obrigado por esperar</h2>", unsafe_allow_html=True)
             
             # Limpar os dados
             df_clean = clean_data(df_sheet)
