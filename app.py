@@ -60,10 +60,10 @@ if uploaded_file is not None:
     st.subheader("Dados Originais")
     st.write(df_sheet)
     
-    # Botão para executar o tratamento
+    # Mostrar o botão para executar o tratamento
     if st.button("Executar Tratamento"):
         with st.spinner('Processando...'):
-            # Mostrar animação
+            # Mostrar animação durante o processamento
             st_lottie(lottie_loading, height=200, key="loading")
             
             # Limpar os dados
